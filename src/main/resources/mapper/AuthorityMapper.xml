@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hasd.ddcodeboot.mapper.AuthorityMapper">
+
+    <select id="getAuthorityNameFromUserRole" resultType="String">
+        select name
+        from authority
+        where id in (select authority_id from role_authority where role_id = #{roleId})
+          and deleted_at IS NULL;
+    </select>
+    <select id="getAuthorityByRoleId" resultType="com.hasd.ddcodeboot.entity.Authority">
+        select name, id, description
+        from authority
+        where id in (select authority_id from role_authority where role_id = #{roleId})
+          and deleted_at IS NULL;
+    </select>
+    <select id="getAuthorityIdByRoleId" resultType="java.lang.Integer">
+        select id
+        from authority
+        where id in (select authority_id from role_authority where role_id = #{roleId})
+          and deleted_at IS NULL;
+    </select>
+</mapper>

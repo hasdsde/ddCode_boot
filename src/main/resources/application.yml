@@ -1,0 +1,36 @@
+spring:
+    application:
+        name: ddcode_boot
+    profiles:
+        include: props
+    datasource:
+        url: ${spring.datasource.url}
+        driver-class-name: ${spring.datasource.driver-class-name}
+        username: ${spring.datasource.username}
+        password: ${spring.datasource.password}
+        hikari:
+            max-lifetime: 28800
+            # druid 数据源专有配置
+            # 不是druid-spring-boot-starter依赖，SpringBoot默认是不注入druid数据源专有属性值的，需要自己绑定
+        type: com.alibaba.druid.pool.DruidDataSource
+server:
+    port: 8080
+mybatis:
+    mapper-locations: classpath:mapper/*xml
+    type-aliases-package: com.hasd.ddcodeboot.entity
+mybatis-plus:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+management:
+    endpoints:
+        web:
+            exposure:
+                include:
+                    - 'metrics'
+                    - 'env'
+                    - 'scheduledtasks'
+constom:
+    filePath: D:/Code/files/
+    fileUrl: http://127.0.0.1:8080/file/
+    JwtSecret: "lmT9V91jotST2SNm@r&1N$&v^bV"
+

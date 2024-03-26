@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hasd.ddcodeboot.mapper.DeptMapper">
+
+    <select id="getDeptByDeptId" resultType="com.hasd.ddcodeboot.entity.Dept">
+        WITH RECURSIVE department_tree AS (SELECT id, name, description, parent_id
+                                           FROM dept
+                                           WHERE id = #{deptId}
+                                           UNION
+                                           SELECT d.id, d.name, d.description, d.parent_id
+                                           FROM dept d
+                                                    JOIN department_tree dt ON d.parent_id = dt.id)
+        SELECT *
+        FROM department_tree;
+
+    </select>
+    <select id="getDeptIdByDeptId" resultType="int">
+        WITH RECURSIVE department_tree AS (SELECT id
+                                           FROM dept
+                                           WHERE id = #{deptId}
+                                           UNION
+                                           SELECT d.id
+                                           FROM dept d
+                                                    JOIN department_tree dt ON d.parent_id = dt.id)
+        SELECT *
+        FROM department_tree;
+    </select>
+    <select id="getPage" resultType="com.hasd.ddcodeboot.entity.Dept">
+        WITH RECURSIVE department_tree AS (SELECT id, parent_id, name, description, created_at, deleted_at, updated_at
+        FROM dept
+        WHERE id = #{deptId}
+        UNION
+        SELECT d.id,
+        d.parent_id,
+        d.name,
+        d.description,
+        d.created_at,
+        d.deleted_at,
+        d.updated_at
+        FROM dept d
+        JOIN department_tree dt ON d.parent_id = dt.id)
+        SELECT *
+        FROM department_tree
+        <where>
+            <if test="name != null and name != ''">
+                AND name like "%"#{name}"%"
+            </if>
+            <if test="description != null and description != ''">
+                AND description like "%"#{description}"%"
+            </if>
+            <if test="parentId != null and parentId != ''">
+                AND parent_id = #{parentId}
+            </if>
+        </where>
+        limit #{currentPage},#{pageSize};
+    </select>
+    <select id="getPageCount" resultType="java.lang.Integer">
+        WITH RECURSIVE department_tree AS (SELECT id, parent_id, name, description, created_at, deleted_at, updated_at
+                                           FROM dept
+                                           WHERE id = #{deptId}
+                                           UNION
+                                           SELECT d.id,
+                                                  d.parent_id,
+                                                  d.name,
+                                                  d.description,
+                                                  d.created_at,
+                                                  d.deleted_at,
+                                                  d.updated_at
+                                           FROM dept d
+                                                    JOIN department_tree dt ON d.parent_id = dt.id)
+        SELECT COUNT(*) as total_count
+        FROM department_tree;
+    </select>
+</mapper>

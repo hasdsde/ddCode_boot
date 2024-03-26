@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hasd.ddcodeboot.mapper.MenuMapper">
+
+    <select id="getParentMenuFromUser" resultType="com.hasd.ddcodeboot.entity.Menu">
+        select *
+        from menu
+        where menu.id in (select menu_id
+                          from role_menu
+                          where role_id = #{roleId})
+          and deleted_at is null
+          and parent_id is null
+    </select>
+    <select id="getChildMenuFromUser" resultType="com.hasd.ddcodeboot.entity.Menu">
+        select *
+        from menu
+        where menu.id in (select menu_id
+                          from role_menu
+                          where role_id = #{roleId})
+          and deleted_at is null
+          and menu.parent_id is not null
+    </select>
+    <select id="getMenuIdByRoleId" resultType="integer">
+        select id
+        from menu
+        where menu.id in (select menu_id
+                          from role_menu
+                          where role_id = #{roleId})
+          and deleted_at is null
+    </select>
+    <select id="getMenuByRoleId" resultType="com.hasd.ddcodeboot.entity.Menu">
+        select *
+        from menu
+        where menu.id in (select menu_id
+                          from role_menu
+                          where role_id = #{roleId})
+          and deleted_at is null
+    </select>
+</mapper>
