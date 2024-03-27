@@ -39,9 +39,7 @@ public class Menu implements Serializable {
 
     @ApiModelProperty("父级Id")
     private Integer parentId;
-
-    @ApiModelProperty("权限Id")
-    private Integer authorityId;
+    
 
     @ApiModelProperty("排序，越高越靠前")
     private Integer orders;
